@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useHistory } from "react-router-dom";
 
 //urql
-import { useQuery, useMutation } from "urql";
+import { useQuery, useSubscription, useMutation } from "urql";
 
 //state-pool
 import { useGlobalState } from "state-pool";
@@ -34,15 +34,15 @@ query {
 }
 `;
 
-// const newMessageQuery = `
-// subscription {
-//   newMessage {
-//       id
-//       message
-//       senderName
-//   }
-// }
-// `;
+const newMessageQuery = `
+subscription {
+  newMessage {
+      id
+      message
+      senderName
+  }
+}
+`;
 
 const sendMessageMutation = `
 mutation ($message:String!, $senderName:String!){
@@ -61,7 +61,7 @@ const Chat: React.FC<ChatProps> = () => {
   const [{ data }]: any = useQuery({ query: allMessagesQuery });
 
   //new messages subscription
-  // const [result] = useSubscription({ query: newMessageQuery });
+  const [result] = useSubscription({ query: newMessageQuery });
 
   //store messages
   const [messages, setMessages] = useState<String[]>([]);
@@ -71,6 +71,16 @@ const Chat: React.FC<ChatProps> = () => {
 
   //router
   let history = useHistory();
+
+  //scroll to bottom
+  const messageRef = useRef<HTMLDivElement>(null);
+  // const scrollToBottom = () => {
+  //   // window.scrollTo({
+  //   //   top:document.documentElement.scrollHeight,
+  //   //   behavior: "smooth"
+  //   // })
+  //   messageRef!.current!.scrollIntoView({ behavior: "smooth" });
+  // };
   useEffect(() => {
     //check if user is logged in
     if (user.username === "") {
@@ -79,29 +89,32 @@ const Chat: React.FC<ChatProps> = () => {
 
     //set messages
     setMessages(data?.allMessages?.messages);
+    
 
-    // //display new messages
-    // if (result?.data) {
-    //   const messageText = {
-    //     id: result?.data?.newMessage.id,
-    //     message: result?.data?.newMessage.message,
-    //     senderName: result?.data?.newMessage.senderName,
-    //   } as any;
-    //    // eslint-disable-next-line
-    //   if (messages.length < 1) {
-    //     setMessages([messageText])
-    //   } else {
-    //     setMessages([...messages, messageText])
-    //   }
-    // }
+    //display new messages
+    if (result?.data) {
+      const messageText = {
+        id: result?.data?.newMessage.id,
+        message: result?.data?.newMessage.message,
+        senderName: result?.data?.newMessage.senderName,
+      } as any;
+       // eslint-disable-next-line
+      if (messages.length < 1) {
+        setMessages([messageText])
+      } else {
+        setMessages([...messages, messageText])
+      }
+    }
     // eslint-disable-next-line
-  }, [setMessages, data, history, user]);
+  }, [setMessages, data, history, user, result?.data]);
   return (
     <>
       <Flex>
         <Navbar />
       </Flex>
-      <Messages messages={messages} />
+      <div ref={messageRef}>
+        <Messages messages={messages} />
+      </div>
     </>
   );
 };
@@ -170,8 +183,14 @@ const Messages = (props: any) => {
 
   return (
     <>
-      <Flex w='100%' ml='10px'>
-        <Box  pos="fixed" w={"100%"} bg={colorMode === "light" ? "white" : "gray.800"} zIndex={10} bottom='0'>
+      <Flex w="100%" ml="10px">
+        <Box
+          pos="fixed"
+          w={"100%"}
+          bg={colorMode === "light" ? "white" : "gray.800"}
+          zIndex={10}
+          bottom="0"
+        >
           <Formik
             initialValues={{ message: "" }}
             onSubmit={async (values, actions) => {
@@ -204,7 +223,7 @@ const Messages = (props: any) => {
                     borderTopLeftRadius={0}
                     type="submit"
                     isLoading={isSubmitting}
-                    variantColor={colorMode === "light" ? 'pink' : 'blue'}
+                    variantColor={colorMode === "light" ? "pink" : "blue"}
                     variant="ghost"
                   >
                     Send
@@ -214,7 +233,7 @@ const Messages = (props: any) => {
             )}
           </Formik>
         </Box>
-        <Flex mb='70px' mt='50px' w='100%' pos='relative'>
+        <Flex mb="70px" mt="50px" w="100%" pos="relative">
           {/* Display Messages */}
           <ChatFeed
             messages={messages}
@@ -229,7 +248,7 @@ const Messages = (props: any) => {
                 border: "none",
                 padding: 10,
                 backgroundColor: textBubble,
-                maxWidth: '100%'
+                maxWidth: "100%",
               },
             }}
           />
