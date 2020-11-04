@@ -22,13 +22,13 @@ import {
 
 // const { REACT_APP_SERVER_URL } = process.env;
 const subscriptionClient = new SubscriptionClient(
-  "ws://20ed0f338bf7.ngrok.io/graphql"!,
+  "ws://20ed0f338bf7.ngrok.io/graphql",
   {
     reconnect: true,
   }
 );
 const client = createClient({
-  url: "https://20ed0f338bf7.ngrok.io/graphql"!,
+  url: "https://20ed0f338bf7.ngrok.io/graphql",
   exchanges: [
     ...defaultExchanges,
     subscriptionExchange({
