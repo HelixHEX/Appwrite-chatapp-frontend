@@ -37,10 +37,6 @@ const client = createClient({
   ],
 });
 
-// const trackingId = REACT_APP_GOOGLE_ANALYTICS
-// ReactGA.initialize(trackingId!);
-
-
 ReactDOM.render(
   <React.StrictMode>
     <Provider value={client}>
