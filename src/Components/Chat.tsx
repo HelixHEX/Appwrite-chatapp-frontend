@@ -182,7 +182,7 @@ const OnlineUsers = (props: any) => {
       {/* <SimpleGrid columns={1} spacingY="1px" > */}
       <Flex justifyContent="center" width="100%">
         <Text fontWeight="700" textAlign="center">
-          Online Users
+          Online Users (Beta)
         </Text>
       </Flex>
       <Flex pos='absolute' left={2} top={10}>
