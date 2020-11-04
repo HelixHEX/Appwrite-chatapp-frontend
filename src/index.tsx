@@ -3,12 +3,12 @@ import ReactDOM from "react-dom";
 import "./index.css";
 import App from "./App";
 
-// import {
-//   Provider,
-//   subscriptionExchange,
-//   createClient,
-//   defaultExchanges,
-// } from "urql";
+import {
+  Provider,
+  subscriptionExchange,
+  createClient,
+  defaultExchanges,
+} from "urql";
 // import { SubscriptionClient } from "subscriptions-transport-ws";
 
 // chakra ui
@@ -19,34 +19,28 @@ import {
   ColorModeProvider,
 } from "@chakra-ui/core";
 
+const { REACT_APP_SERVER_URL } = process.env;
+const client = createClient({
+  url: REACT_APP_SERVER_URL!,
+  exchanges: [
+    ...defaultExchanges,
+    subscriptionExchange({
+      forwardSubscription: (operation) => subscriptionClient.request(operation),
+    }),
+  ],
+});
 
-// const { REACT_APP_SERVER_URL } = process.env;
-// const subscriptionClient = new SubscriptionClient(
-//   "ws://20ed0f338bf7.ngrok.io/graphql",
-//   {
-//     reconnect: true,
-//   }
-// );
-// const client = createClient({
-//   url: REACT_APP_SERVER_URL!,
-//   exchanges: [
-//     ...defaultExchanges,
-//     subscriptionExchange({
-//       forwardSubscription: (operation) => subscriptionClient.request(operation),
-//     }),
-//   ],
-// });
 
 ReactDOM.render(
   <React.StrictMode>
-    {/* <Provider value={client}> */}
+    <Provider value={client}>
       <ThemeProvider theme={theme}>
         <ColorModeProvider>
           <App />
           <CSSReset />
         </ColorModeProvider>
       </ThemeProvider>
-    {/* </Provider> */}
+    </Provider>
   </React.StrictMode>,
   document.getElementById("root")
 );
