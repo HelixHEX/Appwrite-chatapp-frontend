@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 
 //urql
-import { useQuery, useSubscription, useMutation } from "urql";
+import { useQuery, useMutation } from "urql";
 
 //state-pool
 import { useGlobalState } from "state-pool";
@@ -34,15 +34,15 @@ query {
 }
 `;
 
-const newMessageQuery = `
-subscription {
-  newMessage {
-      id
-      message
-      senderName
-  }
-}
-`;
+// const newMessageQuery = `
+// subscription {
+//   newMessage {
+//       id
+//       message
+//       senderName
+//   }
+// }
+// `;
 
 const sendMessageMutation = `
 mutation ($message:String!, $senderName:String!){
@@ -61,7 +61,7 @@ const Chat: React.FC<ChatProps> = () => {
   const [{ data }]: any = useQuery({ query: allMessagesQuery });
 
   //new messages subscription
-  const [result] = useSubscription({ query: newMessageQuery });
+  // const [result] = useSubscription({ query: newMessageQuery });
 
   //store messages
   const [messages, setMessages] = useState<String[]>([]);
@@ -80,22 +80,22 @@ const Chat: React.FC<ChatProps> = () => {
     //set messages
     setMessages(data?.allMessages?.messages);
 
-    //display new messages
-    if (result?.data) {
-      const messageText = {
-        id: result?.data?.newMessage.id,
-        message: result?.data?.newMessage.message,
-        senderName: result?.data?.newMessage.senderName,
-      } as any;
-       // eslint-disable-next-line
-      if (messages.length < 1) {
-        setMessages([messageText])
-      } else {
-        setMessages([...messages, messageText])
-      }
-    }
+    // //display new messages
+    // if (result?.data) {
+    //   const messageText = {
+    //     id: result?.data?.newMessage.id,
+    //     message: result?.data?.newMessage.message,
+    //     senderName: result?.data?.newMessage.senderName,
+    //   } as any;
+    //    // eslint-disable-next-line
+    //   if (messages.length < 1) {
+    //     setMessages([messageText])
+    //   } else {
+    //     setMessages([...messages, messageText])
+    //   }
+    // }
     // eslint-disable-next-line
-  }, [setMessages, data, result.data, history, user]);
+  }, [setMessages, data, history, user]);
   return (
     <>
       <Flex>
