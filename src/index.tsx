@@ -19,9 +19,9 @@ import {
   ColorModeProvider,
 } from "@chakra-ui/core";
 
-const { REACT_APP_SERVER_URL,  } = process.env;
+const { REACT_APP_SERVER_URL, REACT_APP_SERVER_SUBSCRIPTIONS } = process.env;
 const subscriptionClient = new SubscriptionClient(
-  "ws://localhost:5000/graphql",
+  REACT_APP_SERVER_SUBSCRIPTIONS!,
   {
     reconnect: true,
   }
@@ -35,7 +35,6 @@ const client = createClient({
     }),
   ],
 });
-
 
 ReactDOM.render(
   <React.StrictMode>
