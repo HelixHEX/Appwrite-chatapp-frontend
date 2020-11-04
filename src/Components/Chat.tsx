@@ -266,7 +266,7 @@ const Messages = (props: any) => {
   }
   return (
     <>
-      <Flex w="100%" ml={["0px", '0', '200px', '250px']}>
+      <Flex w="100%" ml={["10px", '10px', '200px', '250px']}>
         <Box
           pos="fixed"
           w={"100%"}
