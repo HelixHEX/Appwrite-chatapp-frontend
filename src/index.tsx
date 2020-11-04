@@ -20,7 +20,7 @@ import {
 } from "@chakra-ui/core";
 
 
-// const { REACT_APP_SERVER_URL } = process.env;
+const { REACT_APP_SERVER_URL } = process.env;
 const subscriptionClient = new SubscriptionClient(
   "ws://20ed0f338bf7.ngrok.io/graphql",
   {
@@ -28,7 +28,7 @@ const subscriptionClient = new SubscriptionClient(
   }
 );
 const client = createClient({
-  url: "https://20ed0f338bf7.ngrok.io/graphql",
+  url: REACT_APP_SERVER_URL!,
   exchanges: [
     ...defaultExchanges,
     subscriptionExchange({
