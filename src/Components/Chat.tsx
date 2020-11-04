@@ -88,8 +88,9 @@ const Chat: React.FC<ChatProps> = () => {
     }
 
     //set messages
-    setMessages(data?.allMessages?.messages);
-    
+    if (data) {
+      setMessages(data?.allMessages?.messages);
+    }
 
     //display new messages
     if (result?.data) {
@@ -106,7 +107,7 @@ const Chat: React.FC<ChatProps> = () => {
       }
     }
     // eslint-disable-next-line
-  }, [setMessages, data, history, user, result?.data]);
+  }, [ setMessages, history, user, result?.data]);
   return (
     <>
       <Flex>
