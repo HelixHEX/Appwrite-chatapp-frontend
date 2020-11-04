@@ -107,7 +107,7 @@ const Chat: React.FC<ChatProps> = () => {
       }
     }
     // eslint-disable-next-line
-  }, [ setMessages, history, user, result?.data]);
+  }, [setMessages, data?.allMessages, history, user, result?.data]);
   return (
     <>
       <Flex>
