@@ -39,14 +39,14 @@ const client = createClient({
 
 ReactDOM.render(
   <React.StrictMode>
-    <Provider value={client}>
+    {/* <Provider value={client}> */}
       <ThemeProvider theme={theme}>
         <ColorModeProvider>
           <App />
           <CSSReset />
         </ColorModeProvider>
       </ThemeProvider>
-    </Provider>
+    {/* </Provider> */}
   </React.StrictMode>,
   document.getElementById("root")
 );
