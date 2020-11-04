@@ -9,7 +9,7 @@ import {
   createClient,
   defaultExchanges,
 } from "urql";
-// import { SubscriptionClient } from "subscriptions-transport-ws";
+import { SubscriptionClient } from "subscriptions-transport-ws";
 
 // chakra ui
 import {
@@ -19,7 +19,13 @@ import {
   ColorModeProvider,
 } from "@chakra-ui/core";
 
-const { REACT_APP_SERVER_URL } = process.env;
+const { REACT_APP_SERVER_URL,  } = process.env;
+const subscriptionClient = new SubscriptionClient(
+  "ws://localhost:5000/graphql",
+  {
+    reconnect: true,
+  }
+);
 const client = createClient({
   url: REACT_APP_SERVER_URL!,
   exchanges: [
