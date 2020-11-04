@@ -11,7 +11,18 @@ import { useGlobalState } from "state-pool";
 import { ChatFeed } from "react-chat-ui";
 
 //chakra
-import { useColorMode, Button, Grid, Flex, Box } from "@chakra-ui/core";
+import {
+  useColorMode,
+  Button,
+  Grid,
+  Flex,
+  Box,
+  Text,
+  List,
+  ListItem,
+  ListIcon,
+  SimpleGrid,
+} from "@chakra-ui/core";
 
 //Navbar
 import Navbar from "./Navbar";
@@ -19,6 +30,7 @@ import Navbar from "./Navbar";
 //formik
 import { Form, Formik } from "formik";
 import { InputField } from "./InputField";
+import useWindowDimensions from "../Providers/WindowWidthProvider";
 
 interface ChatProps {}
 
@@ -55,6 +67,12 @@ mutation ($message:String!, $senderName:String!){
   }
 }
 `;
+
+const UPDATE_LASTSEEN_MUTATION = `
+  mutation udpateLastSeen($now: timestamptz!) {
+    update_users(where: {}, _set: { last_seen: $now})
+  }
+`
 
 const Chat: React.FC<ChatProps> = () => {
   //get messages query
@@ -99,11 +117,11 @@ const Chat: React.FC<ChatProps> = () => {
         message: result?.data?.newMessage.message,
         senderName: result?.data?.newMessage.senderName,
       } as any;
-       // eslint-disable-next-line
+      // eslint-disable-next-line
       if (messages.length < 1) {
-        setMessages([messageText])
+        setMessages([messageText]);
       } else {
-        setMessages([...messages, messageText])
+        setMessages([...messages, messageText]);
       }
     }
     // eslint-disable-next-line
@@ -113,10 +131,72 @@ const Chat: React.FC<ChatProps> = () => {
       <Flex>
         <Navbar />
       </Flex>
-      <div ref={messageRef}>
-        <Messages messages={messages} />
-      </div>
+
+      <Grid mt="50px" templateColumns="repeat(5, 1fr)" gap={3}>
+        <OnlineUsers />
+        <div ref={messageRef}>
+          <Messages messages={messages} />
+        </div>
+      </Grid>
     </>
+  );
+};
+
+const SmallScreenModal = (props: any) => {
+  return null
+};
+
+const OnlineUsers = (props: any) => {
+  const [users, setUsers] = useState([
+    "Someone",
+    "Helix",
+    "Someone",
+    "Helix",
+    "Someone",
+    "Helix",
+    "Someone",
+    "Helix",
+  ]);
+  const [onlineIndicator, setOnlineIndicator] = useState(0);
+  let onlineUsersList;
+  useEffect(() => {
+    // Every 30s, run a mutation to tell the backend that you're online
+    updateLastSeen();
+    setOnlineIndicator(window.setInterval(() => updateLastSeen(), 30000));
+    return () => {
+      // Clean up
+      clearInterval(onlineIndicator);
+    };
+  }, []);
+  const [_, updateLastSeenMutation] = useMutation(UPDATE_LASTSEEN_MUTATION);
+  const updateLastSeen = () => {
+    // Use the apollo client to run a mutation to update the last_seen value
+    updateLastSeenMutation({now: new Date().toISOString()});
+  };
+  const { width } = useWindowDimensions();
+  if (width < 768) {
+    return null
+  }
+  return (
+    <Flex display='flex' pos="fixed" width="200px" height="100%" justify='space-between'>
+      {/* <SimpleGrid columns={1} spacingY="1px" > */}
+      <Flex justifyContent="center" width="100%">
+        <Text fontWeight="700" textAlign="center">
+          Online Users
+        </Text>
+      </Flex>
+      <Flex pos='absolute' left={2} top={10}>
+        <List spacing={3}>
+          {users.map((data, index) => (
+            <ListItem  key={index}>
+              <ListIcon icon="check-circle" color="green.500" />
+              <Text display="inline-block">{data}</Text>
+            </ListItem>
+          ))}
+        </List>
+      </Flex>
+      {/* </SimpleGrid> */}
+    </Flex>
   );
 };
 
@@ -132,6 +212,9 @@ const Messages = (props: any) => {
 
   //get global user
   const [user] = useGlobalState("user");
+  
+  //get screen width
+  const { width } = useWindowDimensions();
 
   let textBubble = colorMode === "light" ? "gray.50" : "gray.800";
   let textColor = colorMode === "light" ? "#D53F8C" : "#3182CE";
@@ -181,10 +264,9 @@ const Messages = (props: any) => {
       </>
     );
   }
-
   return (
     <>
-      <Flex w="100%" ml="10px">
+      <Flex w="100%" ml={["250px", '0', '200px', '250px']}>
         <Box
           pos="fixed"
           w={"100%"}
@@ -234,7 +316,7 @@ const Messages = (props: any) => {
             )}
           </Formik>
         </Box>
-        <Flex mb="70px" mt="50px" w="100%" pos="relative">
+        <Flex mb="70px" w="100%" pos="relative">
           {/* Display Messages */}
           <ChatFeed
             messages={messages}
