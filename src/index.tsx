@@ -3,13 +3,13 @@ import ReactDOM from "react-dom";
 import "./index.css";
 import App from "./App";
 
-import {
-  Provider,
-  subscriptionExchange,
-  createClient,
-  defaultExchanges,
-} from "urql";
-import { SubscriptionClient } from "subscriptions-transport-ws";
+// import {
+//   Provider,
+//   subscriptionExchange,
+//   createClient,
+//   defaultExchanges,
+// } from "urql";
+// import { SubscriptionClient } from "subscriptions-transport-ws";
 
 // chakra ui
 import {
@@ -20,22 +20,22 @@ import {
 } from "@chakra-ui/core";
 
 
-const { REACT_APP_SERVER_URL } = process.env;
-const subscriptionClient = new SubscriptionClient(
-  "ws://20ed0f338bf7.ngrok.io/graphql",
-  {
-    reconnect: true,
-  }
-);
-const client = createClient({
-  url: REACT_APP_SERVER_URL!,
-  exchanges: [
-    ...defaultExchanges,
-    subscriptionExchange({
-      forwardSubscription: (operation) => subscriptionClient.request(operation),
-    }),
-  ],
-});
+// const { REACT_APP_SERVER_URL } = process.env;
+// const subscriptionClient = new SubscriptionClient(
+//   "ws://20ed0f338bf7.ngrok.io/graphql",
+//   {
+//     reconnect: true,
+//   }
+// );
+// const client = createClient({
+//   url: REACT_APP_SERVER_URL!,
+//   exchanges: [
+//     ...defaultExchanges,
+//     subscriptionExchange({
+//       forwardSubscription: (operation) => subscriptionClient.request(operation),
+//     }),
+//   ],
+// });
 
 ReactDOM.render(
   <React.StrictMode>

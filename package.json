@@ -15,7 +15,6 @@
     "react": "^16.14.0",
     "react-chat-ui": "^0.4.0",
     "react-dom": "^16.14.0",
-    "react-ga": "^3.2.0",
     "react-router-dom": "^5.2.0",
     "react-scripts": "4.0.0",
     "state-pool": "^0.3.0",
