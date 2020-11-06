@@ -14,7 +14,7 @@ import {
   Box,
 } from "@chakra-ui/core";
 
-import Navbar from "./Navbar";
+import Navbar from "../../Components/Navbar";
 
 
 interface loginProps {}

@@ -3,8 +3,8 @@ import React from "react";
 import { BrowserRouter as Router, Route } from "react-router-dom";
 
 //Components
-import Login from "./Components/Login";
-import Chat from "./Components/Chat";
+import Login from "./Containers/Login/Login";
+import Chat from "./Containers/Chat/Chat";
 
 
 const App = () => {
