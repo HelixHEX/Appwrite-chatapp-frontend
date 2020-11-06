@@ -7,14 +7,15 @@ import {
   Provider,
   subscriptionExchange,
   createClient,
-  defaultExchanges,
+  dedupExchange,
+  fetchExchange,
 } from "urql";
 import { SubscriptionClient } from "subscriptions-transport-ws";
 
 // chakra ui
 import {
   CSSReset,
-  ThemeProvider,
+  ThemeProvider, 
   theme,
   ColorModeProvider,
 } from "@chakra-ui/core";
@@ -29,7 +30,8 @@ const subscriptionClient = new SubscriptionClient(
 const client = createClient({
   url: REACT_APP_SERVER_URL!,
   exchanges: [
-    ...defaultExchanges,
+    dedupExchange,
+    fetchExchange,
     subscriptionExchange({
       forwardSubscription: (operation) => subscriptionClient.request(operation),
     }),

@@ -17,6 +17,8 @@
     "react-dom": "^16.14.0",
     "react-router-dom": "^5.2.0",
     "react-scripts": "4.0.0",
+    "semantic-ui-css": "^2.4.1",
+    "semantic-ui-react": "^2.0.1",
     "state-pool": "^0.3.0",
     "subscriptions-transport-ws": "^0.9.18",
     "urql": "^1.10.3",
