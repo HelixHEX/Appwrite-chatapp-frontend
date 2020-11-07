@@ -32,15 +32,12 @@ const OnlineUsers = (props: any) => {
   //   // Use the apollo client to run a mutation to update the last_seen value
   //   updateLastSeenMutation({ now: new Date().toISOString() });
   // };
-  const { width } = useWindowDimensions();
-  if (width < 768) {
-    return null;
-  }
+ 
   return (
     <Flex
       display="flex"
       pos="fixed"
-      width="200px"
+      width={["opx", '0px', '0', '200px', '200px']}
       height="100%"
       justify="space-between"
     >

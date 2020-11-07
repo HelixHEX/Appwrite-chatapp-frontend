@@ -1,7 +1,7 @@
 import React from "react";
 
 //Chakra ui components
-import { ListItem, Text, useColorMode, Flex } from "@chakra-ui/core";
+import { ListItem, Text, useColorMode, Flex, Box } from "@chakra-ui/core";
 
 interface MessageProps {
   id: string;
@@ -13,7 +13,7 @@ interface MessageProps {
 const Message: React.FC<MessageProps> = ({ index, message, senderName }) => {
   const { colorMode } = useColorMode();
 
-  let textBubble = colorMode === "light" ? "pink.400" : "blue.800";
+  let textBubble = colorMode === "light" ? "blue.400" : "blue.900";
   let textColor = colorMode === "light" ? "white" : "blue.200";
   let senderColor = colorMode === 'light' ? 'gray.700' : 'gray.200'
   if (index === 0) {
@@ -29,7 +29,7 @@ const Message: React.FC<MessageProps> = ({ index, message, senderName }) => {
           maxW="800px"
           w="max-content"
         >
-          <Text fontSize="14px"  fontWeight={200} color={textColor}>
+          <Text fontSize="15px"  color={textColor}>
             {message}
           </Text>
         </Flex>
@@ -43,21 +43,23 @@ const Message: React.FC<MessageProps> = ({ index, message, senderName }) => {
   }
 
   return (
-    <ListItem mt={5} maxW="800px" w="max-content">
-      <Flex
+    <ListItem pos='relative' mt={5} >
+      <Box
+        maxW='900px'
+        w='max-content'
         display="inline-block"
         padding={2}
+        pos='relative'
         roundedTopLeft={10}
         roundedTopRight={10}
         roundedBottomRight={10}
         bg={textBubble}
-        maxW="800px"
-        w="max-content"
+       
       >
-        <Text fontSize="14px"fontWeight={200} color={textColor}>
+        <Text overflowX='auto' wordBreak='break-word' fontSize="16px" color={textColor}>
           {message}
         </Text>
-      </Flex>
+      </Box>
       <Flex>
         <Text fontSize="13px" color={senderColor} >
           {senderName}
