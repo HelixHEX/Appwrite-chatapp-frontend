@@ -1,7 +1,9 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 //Chakra ui components
 import { ListItem, Text, useColorMode, Flex, Box } from "@chakra-ui/core";
+
+import useWindowDimensions from '../../Providers/WindowWidthProvider'
 
 interface MessageProps {
   id: string;
@@ -16,9 +18,14 @@ const Message: React.FC<MessageProps> = ({ index, message, senderName }) => {
   let textBubble = colorMode === "light" ? "blue.400" : "blue.900";
   let textColor = colorMode === "light" ? "white" : "blue.200";
   let senderColor = colorMode === 'light' ? 'gray.700' : 'gray.200'
+
+  //check screen size
+  const { width } = useWindowDimensions()
+  const [maxWidth, setMaxWidth] = useState(800)
+
   if (index === 0) {
     return (
-      <ListItem mt={5} maxW="800px" w="max-content">
+      <ListItem mt={5} >
         <Flex
           display="inline-block"
           padding={2}
@@ -26,7 +33,7 @@ const Message: React.FC<MessageProps> = ({ index, message, senderName }) => {
           roundedTopRight={10}
           roundedBottomRight={10}
           bg={textBubble}
-          maxW="800px"
+          maxW={maxWidth}
           w="max-content"
         >
           <Text fontSize="15px"  color={textColor}>
@@ -45,7 +52,7 @@ const Message: React.FC<MessageProps> = ({ index, message, senderName }) => {
   return (
     <ListItem pos='relative' mt={5} >
       <Box
-        maxW='900px'
+        maxW={width-300}
         w='max-content'
         display="inline-block"
         padding={2}

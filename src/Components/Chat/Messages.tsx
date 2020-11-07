@@ -120,7 +120,7 @@ const Messages: React.FC<MessagesProps> = () => {
         </Box>
         <Flex mb="80px" w="100%" pos="relative">
           <List>
-            {messages.map((message, index) => (
+            {messages?.map((message, index) => (
               <Message
                 id={message.id}
                 message={message.message}
