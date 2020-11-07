@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 
 //urql
 import { useQuery, useSubscription, useMutation } from "urql";
@@ -7,7 +7,7 @@ import { useQuery, useSubscription, useMutation } from "urql";
 import { useGlobalState } from "state-pool";
 
 //Chakra ui components
-import { useColorMode, Flex, Grid, Button, Box, List } from "@chakra-ui/core";
+import { useColorMode, Flex, Grid, Button, Box, List, Text } from "@chakra-ui/core";
 
 //Formik
 import { Form, Formik } from "formik";
@@ -16,6 +16,8 @@ import { InputField } from "../../Components/InputField";
 //Message Component
 import Message from "./Message";
 import useWindowDimensions from "../../Providers/WindowWidthProvider";
+
+import * as Scroll from 'react-scroll'
 
 interface MessagesProps {}
 
@@ -73,13 +75,26 @@ const Messages: React.FC<MessagesProps> = () => {
   //get global user
   const [user] = useGlobalState("user");
 
-  //setMessages
+  // const messagesEndRef = useRef<HTMLDivElement | null>(null);
+
+  // const scrollToBottom = () => {
+  //   messagesEndRef?.current?.scrollIntoView({ behavior: "smooth" });
+  // };
+  const Element = Scroll.Element
+  const scroll = Scroll.animateScroll
+  const {height} = useWindowDimensions()
+  const scrollToBottom = () => {
+    scroll.scrollTo(height+height)
+  }
+  
+  //setMessages 
   useEffect(() => {
     if (!fetching) {
-      setMessages(data?.allMessages?.messages);
+      setMessages(data?.allMessages?.messages)
+      scrollToBottom();
     }
-  }, [data, user, fetching]);
-
+  }, [data?.allMessages?.messages, user, fetching]);
+  //
   //check screen size
 
   //check if messages are loaded
@@ -88,7 +103,12 @@ const Messages: React.FC<MessagesProps> = () => {
       { id: "1", message: "Text", senderName: "Helix" },
       { id: "1", message: "Text", senderName: "Helix" },
       { id: "1", message: "Text", senderName: "Helix" },
-      { id: "1", message: "Texfdskl fjlsdkf asdlkfj asdlkfj asldfj asdlkjf alsdfj dsaljf sladjfsadljflkajfdklfjasjda;lkdjf aslkdfj aslkdjf a;sdklf als;kf asjld kfjalsdkfjaslk dfjalksdjfa dflksajflkasjd ff dslkfj sl;kfj;lakdjfa s;ldjkfasf asdklfasdfjaksldjfalkdjalksdjf lka sfasldfk aldj faklsf jdsl ft", senderName: "Helix" }
+      {
+        id: "1",
+        message:
+          "Texfdskl fjlsdkf asdlkfj asdlkfj asldfj asdlkjf alsdfj dsaljf sladjfsadljflkajfdklfjasjda;lkdjf aslkdfj aslkdjf a;sdklf als;kf asjld kfjalsdkfjaslk dfjalksdjfa dflksajflkasjd ff dslkfj sl;kfj;lakdjfa s;ldjkfasf asdklfasdfjaksldjfalkdjalksdjf lka sfasldfk aldj faklsf jdsl ft",
+        senderName: "Helix",
+      },
     ];
     return (
       <>
@@ -128,12 +148,14 @@ const Messages: React.FC<MessagesProps> = () => {
           <Flex mb="80px" w="100%" pos="relative">
             <List>
               {MockMessages?.map((message, index) => (
-                <Message
-                  id={message.id}
-                  message={message.message}
-                  senderName={message.senderName}
-                  index={index}
-                />
+                <div >
+                  <Message
+                    id={message.id}
+                    message={message.message}
+                    senderName={message.senderName}
+                    index={index}
+                  />
+                </div>
               ))}
               <NewMessages />
             </List>
@@ -142,7 +164,7 @@ const Messages: React.FC<MessagesProps> = () => {
       </>
     );
   }
-
+  //hi
   return (
     <>
       {/* ml={["10px", "10px", "200px", "250px"]} */}
@@ -180,14 +202,16 @@ const Messages: React.FC<MessagesProps> = () => {
           </Formik>
         </Box>
         <Flex mb="80px" w="100%" pos="relative">
-          <List>
+          <List >
             {messages.map((message, index) => (
-              <Message
-                id={message.id}
-                message={message.message}
-                senderName={message.senderName}
-                index={index}
-              />
+              <div >
+                <Message
+                  id={message.id}
+                  message={message.message}
+                  senderName={message.senderName}
+                  index={index}
+                />
+              </div>
             ))}
             <NewMessages />
           </List>
@@ -256,7 +280,13 @@ const Messages: React.FC<MessagesProps> = () => {
 };
 
 const NewMessages = () => {
+  const scroll = Scroll.animateScroll
+  const {height} = useWindowDimensions()
+  const scrollToBottom = () => {
+    scroll.scrollTo(height+height)
+  }
   const handleSubscription = (prevMessages: any = [], response) => {
+    scrollToBottom();
     return [...prevMessages, response.newMessage];
   };
   const [res] = useSubscription(
@@ -270,11 +300,13 @@ const NewMessages = () => {
   return (
     <>
       {res.data.map((message) => (
-        <Message
-          id={message.id}
-          message={message.message}
-          senderName={message.senderName}
-        />
+        <div >
+          <Message
+            id={message.id}
+            message={message.message}
+            senderName={message.senderName}
+          />
+        </div>
       ))}
     </>
   );
