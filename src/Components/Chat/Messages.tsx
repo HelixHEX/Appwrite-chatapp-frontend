@@ -84,54 +84,61 @@ const Messages: React.FC<MessagesProps> = () => {
 
   //check if messages are loaded
   if (messages === undefined) {
+    var MockMessages = [
+      { id: "1", message: "Text", senderName: "Helix" },
+      { id: "1", message: "Text", senderName: "Helix" },
+      { id: "1", message: "Text", senderName: "Helix" },
+      { id: "1", message: "Texfdskl fjlsdkf asdlkfj asdlkfj asldfj asdlkjf alsdfj dsaljf sladjfsadljflkajfdklfjasjda;lkdjf aslkdfj aslkdjf a;sdklf als;kf asjld kfjalsdkfjaslk dfjalksdjfa dflksajflkasjd ff dslkfj sl;kfj;lakdjfa s;ldjkfasf asdklfasdfjaksldjfalkdjalksdjf lka sfasldfk aldj faklsf jdsl ft", senderName: "Helix" }
+    ];
     return (
       <>
-        <Flex ml='10px' w="100%" >
-        <Box bg={colorMode === 'light' ? 'white' : 'gray.800'} pos="fixed" w={"100%"} zIndex={10} bottom="0">
-          <Formik
-            initialValues={{ message: "" }}
-            onSubmit={async (values, actions) => {
-              await send({
-                message: values.message,
-                senderName: user.username,
-              });
-              actions.setSubmitting(false);
-              values.message = "";
-            }}
+        <Flex ml="10px" w="100%">
+          <Box
+            bg={colorMode === "light" ? "white" : "gray.800"}
+            pos="fixed"
+            w={"100%"}
+            zIndex={10}
+            bottom="0"
           >
-            {({ isSubmitting }) => (
-              <Form>
-                <Box
-                  w="auto"
-                  pos="relative"
-                  mb='10px'
-                  mr="20px"
-                >
-                  <InputField
-                    label=""
-                    name="message"
-                    placeholder="Enter message"
-                    isSubmitting={isSubmitting}
-                  />
-                </Box>
-              </Form>
-            )}
-          </Formik>
-        </Box>
-        <Flex mb="80px" w="100%" pos="relative">
-          <List>
-            {messages?.map((message, index) => (
-              <Message
-                id={message.id}
-                message={message.message}
-                senderName={message.senderName}
-                index={index}
-              />
-            ))}
-            <NewMessages />
-          </List>
+            <Formik
+              initialValues={{ message: "" }}
+              onSubmit={async (values, actions) => {
+                await send({
+                  message: values.message,
+                  senderName: user.username,
+                });
+                actions.setSubmitting(false);
+                values.message = "";
+              }}
+            >
+              {({ isSubmitting }) => (
+                <Form>
+                  <Box w="auto" pos="relative" mb="10px" mr="20px">
+                    <InputField
+                      label=""
+                      name="message"
+                      placeholder="Enter message"
+                      isSubmitting={isSubmitting}
+                    />
+                  </Box>
+                </Form>
+              )}
+            </Formik>
+          </Box>
+          <Flex mb="80px" w="100%" pos="relative">
+            <List>
+              {MockMessages?.map((message, index) => (
+                <Message
+                  id={message.id}
+                  message={message.message}
+                  senderName={message.senderName}
+                  index={index}
+                />
+              ))}
+              <NewMessages />
+            </List>
+          </Flex>
         </Flex>
-      </Flex>
       </>
     );
   }
@@ -139,8 +146,14 @@ const Messages: React.FC<MessagesProps> = () => {
   return (
     <>
       {/* ml={["10px", "10px", "200px", "250px"]} */}
-      <Flex ml='10px' w="100%" >
-        <Box bg={colorMode === 'light' ? 'white' : 'gray.800'} pos="fixed" w={"100%"} zIndex={10} bottom="0">
+      <Flex ml="10px" w="100%">
+        <Box
+          bg={colorMode === "light" ? "white" : "gray.800"}
+          pos="fixed"
+          w={"100%"}
+          zIndex={10}
+          bottom="0"
+        >
           <Formik
             initialValues={{ message: "" }}
             onSubmit={async (values, actions) => {
@@ -154,12 +167,7 @@ const Messages: React.FC<MessagesProps> = () => {
           >
             {({ isSubmitting }) => (
               <Form>
-                <Box
-                  w="auto"
-                  pos="relative"
-                  mb='10px'
-                  mr="20px"
-                >
+                <Box w="auto" pos="relative" mb="10px" mr="20px">
                   <InputField
                     label=""
                     name="message"
