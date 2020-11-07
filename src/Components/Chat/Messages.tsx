@@ -15,6 +15,7 @@ import { InputField } from "../../Components/InputField";
 
 //Message Component
 import Message from "./Message";
+import useWindowDimensions from "../../Providers/WindowWidthProvider";
 
 interface MessagesProps {}
 
@@ -75,19 +76,21 @@ const Messages: React.FC<MessagesProps> = () => {
   //setMessages
   useEffect(() => {
     if (!fetching) {
-      setMessages(data.allMessages.messages);
+      setMessages(data?.allMessages?.messages);
     }
   }, [data, user, fetching]);
+
+  //check screen size
 
   //check if messages are loaded
   if (messages === undefined) {
     return (
       <>
-        <Flex ml={["10px", "10px", "200px", "250px"]}>
-          <div>Loading...</div>
+        <Flex ml='10px' w="100%" >
+        <Box bg={colorMode === 'light' ? 'white' : 'gray.800'} pos="fixed" w={"100%"} zIndex={10} bottom="0">
           <Formik
             initialValues={{ message: "" }}
-            onSubmit={async (values: any, actions: any) => {
+            onSubmit={async (values, actions) => {
               await send({
                 message: values.message,
                 senderName: user.username,
@@ -98,42 +101,91 @@ const Messages: React.FC<MessagesProps> = () => {
           >
             {({ isSubmitting }) => (
               <Form>
-                <Grid gridColumn={2} gridRow={1} width={"100%"}>
-                  <Flex>
-                    <Box pos={"fixed"} bottom={0} mb={4} w={"100%"}>
-                      <InputField
-                        name="message"
-                        placeholder="Enter Message"
-                        label=""
-                      />
-                    </Box>
-                  </Flex>
-                  <Button
-                    pos={"fixed"}
-                    bottom={0}
-                    mb={4}
-                    right={0}
-                    borderBottomLeftRadius={0}
-                    borderTopLeftRadius={0}
-                    type="submit"
-                    isLoading={isSubmitting}
-                    variantColor="purple"
-                    variant="ghost"
-                  >
-                    Send
-                  </Button>
-                </Grid>
+                <Box
+                  w="auto"
+                  pos="relative"
+                  mb='10px'
+                  mr="20px"
+                >
+                  <InputField
+                    label=""
+                    name="message"
+                    placeholder="Enter message"
+                    isSubmitting={isSubmitting}
+                  />
+                </Box>
               </Form>
             )}
           </Formik>
+        </Box>
+        <Flex mb="80px" w="100%" pos="relative">
+          <List>
+            {messages.map((message, index) => (
+              <Message
+                id={message.id}
+                message={message.message}
+                senderName={message.senderName}
+                index={index}
+              />
+            ))}
+            <NewMessages />
+          </List>
         </Flex>
+      </Flex>
       </>
     );
   }
 
   return (
     <>
-      <Flex w="100%" ml={["10px", "10px", "200px", "250px"]}>
+      {/* ml={["10px", "10px", "200px", "250px"]} */}
+      <Flex ml='10px' w="100%" >
+        <Box bg={colorMode === 'light' ? 'white' : 'gray.800'} pos="fixed" w={"100%"} zIndex={10} bottom="0">
+          <Formik
+            initialValues={{ message: "" }}
+            onSubmit={async (values, actions) => {
+              await send({
+                message: values.message,
+                senderName: user.username,
+              });
+              actions.setSubmitting(false);
+              values.message = "";
+            }}
+          >
+            {({ isSubmitting }) => (
+              <Form>
+                <Box
+                  w="auto"
+                  pos="relative"
+                  mb='10px'
+                  mr="20px"
+                >
+                  <InputField
+                    label=""
+                    name="message"
+                    placeholder="Enter message"
+                    isSubmitting={isSubmitting}
+                  />
+                </Box>
+              </Form>
+            )}
+          </Formik>
+        </Box>
+        <Flex mb="80px" w="100%" pos="relative">
+          <List>
+            {messages.map((message, index) => (
+              <Message
+                id={message.id}
+                message={message.message}
+                senderName={message.senderName}
+                index={index}
+              />
+            ))}
+            <NewMessages />
+          </List>
+        </Flex>
+      </Flex>
+      {/* <Flex w="100%" ml='10px' mr='200px'>
         <Box
           pos="fixed"
           w={"100%"}
@@ -154,32 +206,25 @@ const Messages: React.FC<MessagesProps> = () => {
           >
             {({ isSubmitting }) => (
               <Form>
-                <Grid gridColumn={2} gridRow={1} width={"100%"}>
-                  <Flex  mr='250px' >
-                    <Box mr='10px' mb={4} w={"100%"}>
-                      <InputField
-                        name="message"
-                        placeholder="Enter Message"
-                        label=""
-                      />
-                    </Box>
-                    <Flex mt='2%' mr='10px' >
-                      <Button
-                        bottom={0}
-                        mb={4}
-                        right={0}
-                        borderBottomLeftRadius={0}
-                        borderTopLeftRadius={0}
-                        type="submit"
-                        isLoading={isSubmitting}
-                        variantColor={colorMode === "light" ? "pink" : "blue"}
-                        variant="ghost"
-                      >
-                        Send
-                      </Button>
-                    </Flex>
-                  </Flex>
-                </Grid>
+                
+                <Box w="auto" pos="relative" mt="-10px" mb={4}>
+                  <InputField
+                    isSubmitting={isSubmitting}
+                    name="message"
+                    placeholder="Enter Message"
+                    label=""
+                  />
+                </Box>
+                <Flex>
+                  <Button
+                    type="submit"
+                    isLoading={isSubmitting}
+                    variantColor={colorMode === "light" ? "cyan" : "blue"}
+                    variant="ghost"
+                  >
+                    Send
+                  </Button>
+                </Flex>
               </Form>
             )}
           </Formik>
@@ -197,7 +242,7 @@ const Messages: React.FC<MessagesProps> = () => {
             <NewMessages />
           </List>
         </Flex>
-      </Flex>
+      </Flex> */}
     </>
   );
 };
@@ -225,6 +270,12 @@ const NewMessages = () => {
       ))}
     </>
   );
+};
+
+const MobileInput = (props: any) => {
+  const { messages } = props;
+
+  return <></>;
 };
 
 export default Messages;

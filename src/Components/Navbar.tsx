@@ -8,7 +8,7 @@ const Navbar: React.FC<NavbarProps> = () => {
   const { colorMode, toggleColorMode } = useColorMode();
   return (
     <>
-      <Flex top='0' w='100%' zIndex={999} bg={colorMode === "light" ? "white" : "gray.800"} pos='fixed'>
+      <Flex ml='10px' top='0' w='100%' zIndex={999} bg={colorMode === "light" ? "white" : "gray.800"} pos='fixed'>
         <IconButton
           variant="outline"
           aria-label="Toggle dark mode"
