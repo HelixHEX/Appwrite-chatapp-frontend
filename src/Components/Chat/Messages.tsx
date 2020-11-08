@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 
 //urql
 import { useQuery, useSubscription, useMutation } from "urql";
@@ -7,7 +7,15 @@ import { useQuery, useSubscription, useMutation } from "urql";
 import { useGlobalState } from "state-pool";
 
 //Chakra ui components
-import { useColorMode, Flex, Grid, Button, Box, List, Text } from "@chakra-ui/core";
+import {
+  useColorMode,
+  Flex,
+  Grid,
+  Button,
+  Box,
+  List,
+  Text,
+} from "@chakra-ui/core";
 
 //Formik
 import { Form, Formik } from "formik";
@@ -17,14 +25,25 @@ import { InputField } from "../../Components/InputField";
 import Message from "./Message";
 import useWindowDimensions from "../../Providers/WindowWidthProvider";
 
-import * as Scroll from 'react-scroll'
+import * as Scroll from "react-scroll";
 
 interface MessagesProps {}
 
 //Get Messages Query
+// const allMessagesQuery = `
+// query ($query:Number!, $pageNumber:Number!) {
+//   allMessages(input: {query: $query, pageNumber:$pageNumber}) {
+//     messages {
+//       id
+//       message
+//       senderName
+//     }
+//   }
+// }
+// `;
 const allMessagesQuery = `
-query {
-  allMessages {
+query  {
+  allMessages  {
     messages {
       id
       message
@@ -62,7 +81,10 @@ const Messages: React.FC<MessagesProps> = () => {
   //get messages query
   const [result] = useQuery({
     query: allMessagesQuery,
+    variables: {offset: 1}
   });
+  const [offset, setOffset] = useState(1)
+  const [scroller, setScroller] = useState<HTMLDivElement | null>()
   const { data, fetching } = result;
   const [messages, setMessages] = useState([]) as any;
   //colormode
@@ -80,17 +102,25 @@ const Messages: React.FC<MessagesProps> = () => {
   // const scrollToBottom = () => {
   //   messagesEndRef?.current?.scrollIntoView({ behavior: "smooth" });
   // };
-  const Element = Scroll.Element
-  const scroll = Scroll.animateScroll
-  const {height} = useWindowDimensions()
+  const scroll = Scroll.animateScroll;
   const scrollToBottom = () => {
-    scroll.scrollTo(height+height)
-  }
-  
-  //setMessages 
+    if (data?.allMessages?.messages) {
+      scroll.scrollTo(data.allMessages.messages.length * 80);
+    }
+  };
+  const handleScroll = (event) => {
+    // const { scrollTop, clientHeight, scrollHeight } = event.currentTarget;
+    // alert("hi");
+    // console.log("scrolltop: ", scrollTop);
+    if (scroller) {
+      console.log(scroller.scrollTop)
+    }
+  };
+  console.log('hi')
+  //setMessages
   useEffect(() => {
     if (!fetching) {
-      setMessages(data?.allMessages?.messages)
+      setMessages(data?.allMessages?.messages);
       scrollToBottom();
     }
   }, [data?.allMessages?.messages, user, fetching]);
@@ -148,7 +178,7 @@ const Messages: React.FC<MessagesProps> = () => {
           <Flex mb="80px" w="100%" pos="relative">
             <List>
               {MockMessages?.map((message, index) => (
-                <div >
+                <div>
                   <Message
                     id={message.id}
                     message={message.message}
@@ -202,19 +232,33 @@ const Messages: React.FC<MessagesProps> = () => {
           </Formik>
         </Box>
         <Flex mb="80px" w="100%" pos="relative">
-          <List >
-            {messages.map((message, index) => (
-              <div >
-                <Message
-                  id={message.id}
-                  message={message.message}
-                  senderName={message.senderName}
-                  index={index}
-                />
-              </div>
-            ))}
-            <NewMessages />
-          </List>
+          <div>
+            <List>
+              {messages.map((message, index) => (
+                // if (index === 0) {
+                //   return (
+                //     <div onScroll={handleScroll} ref={(scroller) => setScroller(scroller)} >
+                //       <Message
+                //         id={message.id}
+                //         message={message.message}
+                //         senderName={message.senderName}
+                //         index={index}
+                //       />
+                //     </div>
+                //   );
+                // }
+                <div key={index} onScroll={handleScroll} ref={(scroller) => setScroller(scroller)}>
+                  <Message
+                    id={message.id}
+                    message={message.message}
+                    senderName={message.senderName}
+                    index={index}
+                  />
+                </div>
+              ))}
+              <NewMessages messagesLength={messages.length} />
+            </List>
+          </div>
         </Flex>
       </Flex>
       {/* <Flex w="100%" ml='10px' mr='200px'>
@@ -279,12 +323,12 @@ const Messages: React.FC<MessagesProps> = () => {
   );
 };
 
-const NewMessages = () => {
-  const scroll = Scroll.animateScroll
-  const {height} = useWindowDimensions()
+const NewMessages = (props: any) => {
+  const scroll = Scroll.animateScroll;
+  const { height } = useWindowDimensions();
   const scrollToBottom = () => {
-    scroll.scrollTo(height+height)
-  }
+    scroll.scrollTo(props.messagesLength * 80);
+  };
   const handleSubscription = (prevMessages: any = [], response) => {
     scrollToBottom();
     return [...prevMessages, response.newMessage];
@@ -300,7 +344,7 @@ const NewMessages = () => {
   return (
     <>
       {res.data.map((message) => (
-        <div >
+        <div>
           <Message
             id={message.id}
             message={message.message}
