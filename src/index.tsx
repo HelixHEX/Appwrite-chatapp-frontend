@@ -7,10 +7,11 @@ import {
   Provider,
   subscriptionExchange,
   createClient,
-  dedupExchange,
   fetchExchange,
+  dedupExchange,
 } from "urql";
 import { SubscriptionClient } from "subscriptions-transport-ws";
+import { devtoolsExchange } from '@urql/devtools';
 
 // chakra ui
 import {
@@ -30,6 +31,7 @@ const subscriptionClient = new SubscriptionClient(
 const client = createClient({
   url: REACT_APP_SERVER_URL!,
   exchanges: [
+    devtoolsExchange,
     dedupExchange,
     fetchExchange,
     subscriptionExchange({
