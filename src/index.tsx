@@ -9,9 +9,10 @@ import {
   createClient,
   fetchExchange,
   dedupExchange,
+  defaultExchanges,
 } from "urql";
 import { SubscriptionClient } from "subscriptions-transport-ws";
-import { devtoolsExchange } from '@urql/devtools';
+import { cacheExchange } from '@urql/exchange-graphcache';
 
 // chakra ui
 import {
@@ -29,9 +30,9 @@ const subscriptionClient = new SubscriptionClient(
   }
 );
 const client = createClient({
-  url: REACT_APP_SERVER_URL!,
+  url: "http://localhost:5000/graphql",
   exchanges: [
-    devtoolsExchange,
+    cacheExchange(),
     dedupExchange,
     fetchExchange,
     subscriptionExchange({
